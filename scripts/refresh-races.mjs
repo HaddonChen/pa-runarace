@@ -167,6 +167,86 @@ async function fetchSource(source) {
       }
     });
 
+    // Fallback: inspect ordinary HTML event listings.
+    // Only accept a date when it appears in the same listing as a title.
+    const seenLinks = new Set();
+
+    $("a[href]").each((_, element) => {
+      const link = $(element);
+      const name = link.text().replace(/\s+/g, " ").trim();
+
+      if (!name || name.length < 5 || name.length > 180) return;
+
+      let href;
+      try {
+        const parsed = new URL(link.attr("href"), source.url);
+        if (!["http:", "https:"].includes(parsed.protocol)) return;
+        href = parsed.href;
+      } catch {
+        return;
+      }
+
+      if (seenLinks.has(href)) return;
+      seenLinks.add(href);
+
+      // Inspect the link and its nearest parent containers.
+      let container = link;
+      let listingText = "";
+
+      for (let level = 0; level < 5 && container.length; level++) {
+        const text = container.text()
+          .replace(/\s+/g, " ")
+          .trim();
+
+        if (
+          text.length >= name.length &&
+          text.length <= 1800 &&
+          /\b(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}(?:,?\s+\d{4})?\b/i.test(text)
+        ) {
+          listingText = text;
+          break;
+        }
+
+        container = container.parent();
+      }
+
+      if (!listingText) return;
+
+      const dateMatch = listingText.match(
+        /\b(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}(?:,?\s+\d{4})?\b/i
+      );
+
+      if (!dateMatch) return;
+
+      let startDate = dateMatch[0];
+      if (!/\b\d{4}\b/.test(startDate)) {
+        startDate += `, ${now.getUTCFullYear()}`;
+      }
+
+      const parsedDate = new Date(startDate);
+      if (Number.isNaN(parsedDate.getTime())) return;
+
+      const isoDate = [
+        parsedDate.getFullYear(),
+        String(parsedDate.getMonth() + 1).padStart(2, "0"),
+        String(parsedDate.getDate()).padStart(2, "0")
+      ].join("-");
+
+      // Reject obvious navigation links and generic page links.
+      if (/^(home|about|contact|login|register|learn more|view all)$/i.test(name)) {
+        return;
+      }
+
+      events.push({
+        name,
+        startDate: isoDate,
+        url: href,
+        description: listingText.slice(0, 1200),
+        location: {},
+        organizer: { name: source.name }
+      });
+    });
+
     return events.map((event) => {
       const name = typeof event.name === "string" ? event.name.trim() : "";
       const startDate = dateOnly(event.startDate);
