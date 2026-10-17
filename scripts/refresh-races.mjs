@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import * as cheerio from "cheerio";
 
 const DAYS = 90;
-const OUTPUT = new URL("../data/races.json", import.meta.url);
+const OUTPUT = new URL("../public/data/races.json", import.meta.url);
 const TIMEOUT_MS = 12000;
 
 const sources = [
