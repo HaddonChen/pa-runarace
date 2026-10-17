@@ -1,1 +1,19 @@
 
+{
+  "name": "palo-alto-race-finder",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "refresh": "node scripts/refresh-races.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "cheerio": "^1.1.2",
+    "vite": "^6.1.0"
+  },
+  "devDependencies": {}
+}
+
