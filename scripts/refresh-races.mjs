@@ -280,7 +280,9 @@ const output = {
   )
 };
 
-await fs.mkdir(new URL("../data/", import.meta.url), { recursive: true });
+await fs.mkdir(new URL("../public/data/", import.meta.url), {
+  recursive: true
+});
 await fs.writeFile(OUTPUT, `${JSON.stringify(output, null, 2)}\n`);
 
 console.log(`Saved ${output.races.length} unique events.`);
