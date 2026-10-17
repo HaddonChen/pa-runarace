@@ -1,1 +1,86 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183b2e">
+  <meta name="description" content="Discover road races, trail races, and ultramarathons around Palo Alto and the Peninsula.">
+  <title>Palo Alto Race Finder</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav">
+      <a class="brand" href="./">↗ Race Finder</a>
+      <span>PALO ALTO · CALIFORNIA</span>
+    </nav>
+    <div class="hero-content">
+      <p class="eyebrow">YOUR NEXT STARTING LINE</p>
+      <h1>Find your<br><em>next adventure.</em></h1>
+      <p class="intro">One calendar for road races, trail runs, and ultramarathons across Palo Alto and the Peninsula.</p>
+      <a class="primary" href="#calendar">Explore the calendar ↓</a>
+    </div>
+    <div class="landscape" aria-hidden="true"></div>
+  </header>
+
+  <main>
+    <section id="calendar" class="section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow dark">THE RACE CALENDAR</p>
+          <h2>Find your race.</h2>
+        </div>
+        <span class="horizon">◷ Next 90 days</span>
+      </div>
+
+      <div class="search-row">
+        <input id="search" type="search" placeholder="Search races, distances, organizers…" aria-label="Search races">
+        <select id="city" aria-label="Filter by city">
+          <option value="">All Peninsula locations</option>
+          <option>Palo Alto</option>
+          <option>Stanford</option>
+          <option>Menlo Park</option>
+          <option>Mountain View</option>
+          <option>Los Altos</option>
+          <option>Woodside</option>
+          <option>Sunnyvale</option>
+          <option>San Jose</option>
+        </select>
+      </div>
+
+      <div id="filters" class="filters">
+        <button class="filter active" data-type="ALL">All races</button>
+        <button class="filter" data-type="ROAD">Road races</button>
+        <button class="filter" data-type="TRAIL">Trail races</button>
+        <button class="filter" data-type="ULTRA">Ultramarathons</button>
+        <button class="filter" data-type="COMMUNITY">Community runs</button>
+      </div>
+
+      <div class="results-heading">
+        <span id="result-count">Loading races…</span>
+        <label><input id="show-unverified" type="checkbox"> Include unverified listings</label>
+      </div>
+
+      <div id="status" class="status-message" role="status" aria-live="polite"></div>
+      <div id="race-grid" class="race-grid"></div>
+      <p class="disclaimer">Event dates, distances, and registration availability can change. Confirm details with the organizer before travelling or registering.</p>
+      <p id="updated" class="updated"></p>
+    </section>
+
+    <section class="sources-section">
+      <p class="eyebrow dark">EXPLORE LOCAL RUNNING</p>
+      <h2>More running.<br>Less searching.</h2>
+      <p>Find races through local organizers, race calendars, trail-running specialists, and community events.</p>
+      <div id="source-links" class="source-links"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a href="./">Race Finder</a>
+    <span>Built for the running community · Palo Alto, CA</span>
+  </footer>
+</body>
+</html>
+
